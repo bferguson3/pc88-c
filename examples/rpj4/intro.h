@@ -30,23 +30,47 @@ const u8 intro_offsets[] = {
 
 void RunIntro()
 {
+    // vars reset
     u8 i;
     u8 c;
+    lastKey = -1;
+
+    // music
+    LoadSong(&song[0]);
+    playingSong = true;
+    ticker = 0;
+    
+    // load text
     for(i = 0; i < 23; i++)
     {    
+        BufferInput();
+        if(lastKey != -1)
+        {
+            i = 10;
+            break;
+        }
         CPUWAIT(250);
         for(c = 6; c < 16; c++) 
             TextRowCopy(c, c-1);
         SetCursorPos(40 - intro_offsets[i], 15);
-        print(introText[i]);
-        
+        print(introText[i]);    
     }
+    if(lastKey != 0) goto SKIPINTRO;
+    // scroll remaining text until done
     for(i = 0; i < 10; i++)
     {
+        BufferInput();
+        if(lastKey != -1)
+        {
+            i = 10;
+            break;
+        }
         CPUWAIT(250);
         for(c = 6; c < 16-i; c++) 
             TextRowCopy(c, c-1);
     }
+    
+    SKIPINTRO:
 }
 
 void ConfigIntro()

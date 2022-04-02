@@ -74,23 +74,40 @@ inline void MovementKeys()
 
 void BufferInput()
 {
-    if(GetKeyDown(KB_PAD9))
-        lastKey = UpRight;
-    if(GetKeyDown(KB_PAD6))
-        lastKey = Right;
-    if(GetKeyDown(KB_PAD3))
-        lastKey = DownRight;
-    if(GetKeyDown(KB_PAD7))
-        lastKey = UpLeft;
-    if(GetKeyDown(KB_PAD4))
-        lastKey = Left;
-    if(GetKeyDown(KB_PAD1))
-        lastKey = DownLeft;
-    if(GetKeyDown(KB_PAD5))
-        lastKey = Confirm;
-    if(GetKeyDown(KB_PAD0))
-        lastKey = Cancel;
-    
+    switch(inputMode)
+    {
+        case(EXPLORING):
+            if(GetKeyDown(KB_PAD9))
+                lastKey = UpRight;
+            if(GetKeyDown(KB_PAD6))
+                lastKey = Right;
+            if(GetKeyDown(KB_PAD3))
+                lastKey = DownRight;
+            if(GetKeyDown(KB_PAD7))
+                lastKey = UpLeft;
+            if(GetKeyDown(KB_PAD4))
+                lastKey = Left;
+            if(GetKeyDown(KB_PAD1))
+                lastKey = DownLeft;
+            if(GetKeyDown(KB_PAD5))
+                lastKey = Confirm;
+            if(GetKeyDown(KB_PAD0))
+                lastKey = Cancel;
+            if(GetKeyDown(KB_PADRETURN))
+                lastKey = Confirm;
+            break;
+        case(INTRO):
+            if(GetKeyDown(KB_RETURN))
+                lastKey = Confirm;
+            if(GetKeyDown(KB_SPACE))
+                lastKey = Confirm;
+            if(GetKeyDown(KB_ESC))
+                lastKey = Cancel;
+            break;
+        default:
+            lastKey = -1;
+            break;
+    }
 }
 
 void DrawCleanGrid()

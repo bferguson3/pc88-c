@@ -101,13 +101,14 @@ bool playerMoved;
 XYPos player_pos;
 XYPos targetHex;
 //struct xypos zeropos;
-u8 lastKey;
+s8 lastKey;
 u8 inputMode;
 Encounter test;
 
 #define EXPLORING 1
 #define WAITING 0
 #define ENC_SELECT 2
+#define INTRO 3
 #define GUN 0
 #define SPEED 1
 #define BOOK 2
@@ -145,6 +146,9 @@ void main()
     u8 c = 0;
     playingSong = false;
     
+    //
+    // Stall if not V2 mode 
+    //
     c = ReadIOReg(SYS_CTL_REGB);
     if(c & V1MODE_FLAG)
     {
@@ -152,12 +156,27 @@ void main()
         print("V 2   M O D E   O N L Y ");
         while(1){};
     }
+    
+    //
+    // Run Intro
+    //
+    SetCRTC_IRQ((void*)&Vblank);
+    SetIRQs();
+    IRQ_ON  
 
+    inputMode = INTRO;
     ConfigIntro();
     RunIntro();
+    
+    IRQ_OFF;
+
+    //
+    // Load main game
+    //
+    inputMode = WAITING;
 
     SetCursorPos(10,5);
-    print("                                      ");
+    print("                                                     ");
 
     SetCursorPos(30,16);
     print("Loading...");
@@ -210,11 +229,11 @@ void main()
     //DrawImage_V2(67, 162, &deck[0], 8, 38);
     
     // copy out mask
-    //ExpandedGVRAM_Copy_On();
-    //ALUCopyOut(GVRAM_BASE+(player_pos.y*80)+player_pos.x, TEMPGVR_SPRITE_1, 4, 24);
+    ExpandedGVRAM_Copy_On();
+    ALUCopyOut(GVRAM_BASE+(player_pos.y*80)+player_pos.x, TEMPGVR_SPRITE_1, 4, 24);
     // draw sprite 
-    //ExpandedGVRAM_On();
-    //DrawTransparentImage_V2(player_pos.x, player_pos.y, &librarianSprite[0], 32/8, 24);
+    ExpandedGVRAM_On();
+    DrawTransparentImage_V2(player_pos.x, player_pos.y, &librarianSprite[0], 32/8, 24);
     
     // encounter area 
     //DrawTransparentImage_V2(54, 152, &librarianSprite[0], 32/8, 24);
@@ -224,8 +243,8 @@ void main()
     //ALUCopyIn(TEMPGVR_SPRITE_1, GVRAM_BASE+(player_pos.y*80)+player_pos.x, 4, 24);
     
     // ALU off
-    //DisableALU(FASTMEM_OFF);
-    //ExpandedGVRAM_Off();   
+    DisableALU(FASTMEM_OFF);
+    ExpandedGVRAM_Off();   
 
     PrintExploreUI();
     
@@ -235,10 +254,7 @@ void main()
     print("               ");
 
     
-    // First, Write the address of the Vblank routine to the CRTC IRQ vector @ f302
-    SetCRTC_IRQ((void*)&Vblank);
-    SetIRQs();          // And enable the VBL interrupt!
-    IRQ_ON              // run once!
+
     while(1)
     { 
         // wait for 1/60 irq to finish
@@ -322,9 +338,9 @@ void Vblank() __critical __interrupt
     //print(d);
     //u8* d2 = byToHex((u8)(idleCount & 0xff));
     //print(d2);
-    SetCursorPos(0, 19);
-    res = byToHex(randnum & 0xff);
-    print(res);
+    //SetCursorPos(0, 19);
+    //res = byToHex(randnum & 0xff);
+    //print(res);
     
     
     idleCount = 0;
