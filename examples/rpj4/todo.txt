@@ -3,12 +3,11 @@
 3/25 - encounter code/struct <--
 3/26 - example encounters <--
 3/27 - music A <--
-3/28 - intro <--
 3/29 - title
 3/30 - save/load??
-
 4/1  - polish map 1
 4/2 - map 2
+
 4/3 - map 3
 4/4 - map 4
 4/5 - polish map 2

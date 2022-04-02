@@ -213,7 +213,7 @@ void DrawAreaAroundPlayer()
     
 }
 
-void DrawInputUI()
+void PrintExploreUI()
 {
     SetCursorPos(75, 4);
     print("2/2");
@@ -227,10 +227,10 @@ void DrawInputUI()
     print("           ");
     SetCursorPos(5,16);
 
-    print("ENCOUNTER!\n\n   A wild RoboBoar crashes through the brush!");
-    //print("[7   9]\n");
+    //print("ENCOUNTER!\n\n   A wild RoboBoar crashes through the brush!");
+    print("[7   9]\n");
     // explore mode
-    //print("[4   6]  Move      [5]  Search\n"); 
-    //print("[1   3]         [0]     Camp");
+    print("[4   6]  Move      [5]  Search\n"); 
+    print("[1   3]         [0]     Camp");
     
 }

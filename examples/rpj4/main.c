@@ -122,10 +122,17 @@ void DrawAreaAroundPlayer();
 void DrawInputUI();
 void BufferInput();
 inline void MovementKeys();
+void ConfigIntro();
+void CPUWAIT(u16 n);
+void RunIntro();
+
+#include "intro.h"
+
 
 enum Inputs { 
     UpRight=9, Right=6, DownRight=3, UpLeft=7, Left=4, DownLeft=1, Confirm=5, Cancel=0
 };
+    
 
 void main()
 {
@@ -137,7 +144,6 @@ void main()
     u8 i = 0;
     u8 c = 0;
     playingSong = false;
-    // set up quick draw ram
     
     c = ReadIOReg(SYS_CTL_REGB);
     if(c & V1MODE_FLAG)
@@ -146,6 +152,15 @@ void main()
         print("V 2   M O D E   O N L Y ");
         while(1){};
     }
+
+    ConfigIntro();
+    RunIntro();
+
+    SetCursorPos(10,5);
+    print("                                      ");
+
+    SetCursorPos(30,16);
+    print("Loading...");
 
     GameInit();
 
@@ -162,8 +177,6 @@ void main()
     //else 
     //    SetMonitor(24, 25);
 
-    SetCursorPos(30,19);
-    print("Loading...");
 
     // ALU drawing here
     ExpandedGVRAM_On();     
@@ -193,31 +206,34 @@ void main()
     player_pos.y = 64;
     
     // deck test 
-    DrawImage_V2(52, 162, &deck[0], 8, 38);
-    DrawImage_V2(67, 162, &deck[0], 8, 38);
+    //DrawImage_V2(52, 162, &deck[0], 8, 38);
+    //DrawImage_V2(67, 162, &deck[0], 8, 38);
     
     // copy out mask
-    ExpandedGVRAM_Copy_On();
-    ALUCopyOut(GVRAM_BASE+(player_pos.y*80)+player_pos.x, TEMPGVR_SPRITE_1, 4, 24);
+    //ExpandedGVRAM_Copy_On();
+    //ALUCopyOut(GVRAM_BASE+(player_pos.y*80)+player_pos.x, TEMPGVR_SPRITE_1, 4, 24);
     // draw sprite 
-    ExpandedGVRAM_On();
+    //ExpandedGVRAM_On();
     //DrawTransparentImage_V2(player_pos.x, player_pos.y, &librarianSprite[0], 32/8, 24);
     
     // encounter area 
-    DrawTransparentImage_V2(54, 152, &librarianSprite[0], 32/8, 24);
-    DrawTransparentImage_V2(69, 152, &roboboar[0], 32/8, 24);
+    //DrawTransparentImage_V2(54, 152, &librarianSprite[0], 32/8, 24);
+    //DrawTransparentImage_V2(69, 152, &roboboar[0], 32/8, 24);
     // return backup
     //ExpandedGVRAM_Copy_On();
     //ALUCopyIn(TEMPGVR_SPRITE_1, GVRAM_BASE+(player_pos.y*80)+player_pos.x, 4, 24);
     
     // ALU off
-    DisableALU(FASTMEM_OFF);
-    ExpandedGVRAM_Off();   
+    //DisableALU(FASTMEM_OFF);
+    //ExpandedGVRAM_Off();   
 
-    DrawInputUI();
+    PrintExploreUI();
     
     inputMode = EXPLORING;
     
+    SetCursorPos(30,16);
+    print("               ");
+
     
     // First, Write the address of the Vblank routine to the CRTC IRQ vector @ f302
     SetCRTC_IRQ((void*)&Vblank);
@@ -328,6 +344,13 @@ s16 roll(u8 numDie, u8 sides, s8 mod)
         r += (u8)(1 + (rand() & (sides-1))); // 0-255
     r += mod;
     return r;
+}
+
+void CPUWAIT(u16 n)
+{
+    for(s32 i = n * 1000; i > 0; i--) { 
+        __asm__("nop");
+    }
 }
 
 #include "rpj4.c"
