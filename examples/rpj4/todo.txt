@@ -3,7 +3,7 @@
 3/25 - encounter code/struct <--
 3/26 - example encounters <--
 3/27 - music A <--
-3/29 - title
+[[3/29 - title]]
 3/30 - save/load??
 4/1  - polish map 1
 4/2 - map 2
@@ -15,18 +15,6 @@
 4/7 - polish map 4
 4/9 - music B 
 4/10 - final polish
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -65,7 +53,7 @@ Wibarm
 Wingman 2
 Romancia 
 Blassty 
-Phantasie 
+zPhantasie 
 Soapland (Adult)
 Daiva 
 Riglas 

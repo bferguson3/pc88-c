@@ -36,7 +36,7 @@ void RunIntro()
     lastKey = -1;
 
     // music
-    LoadSong(&song[0]);
+    LoadSong(&introSong[0]);
     playingSong = true;
     ticker = 0;
     
